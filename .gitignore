@@ -1,0 +1,13 @@
+# datafiles
+artifacts/
+/data/
+
+# jupyter
+*/.ipynb_checkpoints
+.DS_Store
+
+# model artifacts
+*.joblib
+
+# python cache
+*/__pycache__
