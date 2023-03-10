@@ -48,18 +48,22 @@ def data_cleaner() -> Tuple[pd.DataFrame, pd.DataFrame]:
     # imputed df
     imputed_df = raw_df.copy()
     # imputing missing categorical features
-    for f in cats:
-        imputed_df[f] = pd.Categorical(imputed_df[f].fillna('missing'))
+    for feat in cats:
+        imputed_df[feat] = pd.Categorical(imputed_df[feat].fillna('missing'))
     # imputing missing numerical features
-    for f in conts:
-        mean = np.mean(imputed_df[f])
-        imputed_df[f] = imputed_df[f].fillna(mean)
+    for feat in conts:
+        mean = np.mean(imputed_df[feat])
+        imputed_df[feat] = imputed_df[feat].fillna(mean)
 
     return complete_df, imputed_df
 
 
 def store_cleaned_data(complete_df: pd.DataFrame, imputed_df: pd.DataFrame):
-    pass
+    """
+    Function for writing processed csv's to local.
+    """
+    complete_df.to_csv("./data/processed/complete_df.csv")
+    imputed_df.to_csv("./data/processed/imputed_df.csv")
 
 
 if __name__ == "__main__":
