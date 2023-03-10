@@ -7,11 +7,9 @@ The three sets are stored in local.
 """
 
 import argparse
+from typing import Tuple
 import pandas as pd
 import numpy as np
-from typing import Tuple
-from pathlib import Path
-from joblib import load
 
 parser = argparse.ArgumentParser(
     prog='ivado data_splitter',
@@ -24,23 +22,25 @@ parser.add_argument('--output', type=str, required=True,
                     help='path to output splits as csv')
 
 
-def split(df: pd.DataFrame, split_fracs=[0.6, 0.2, 0.2], seed=42) -> \
+def split(df: pd.DataFrame, split_fracs=(0.6, 0.2, 0.2), seed=42) -> \
         Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    Function for taking an input DF and splitting it into 3 sets.
+
+    Returns three pd.DataFrames: train, test, val
+    """
     assert sum(split_fracs) == 1
-    train, val, test = \
-        np.split(df.sample(frac=1, random_state=seed),
-                 [
-            int(split_fracs[0]*len(df)),
-            int(sum(split_fracs[:2])*len(df))
-        ]
-        )
+    train, val, test = np.split(df.sample(frac=1, random_state=seed),  # pylint: disable=unbalanced-tuple-unpacking
+                                [int(split_fracs[0]*len(df)),
+                                int(sum(split_fracs[:2])*len(df))])
 
     return train, test, val
 
 
-
-
-if __name__ == "__main__":
+def main():
+    """
+    Main method containing logic for this script.
+    """
     args = parser.parse_args()
     df = pd.read_csv(args.data)
     train, test, val = split(df, args.output)
@@ -49,3 +49,7 @@ if __name__ == "__main__":
     train.to_csv(f"{args.output}/train.csv")
     test.to_csv(f"{args.output}/test.csv")
     val.to_csv(f"{args.output}/val.csv")
+
+
+if __name__ == "__main__":
+    main()
