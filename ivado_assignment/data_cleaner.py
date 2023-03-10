@@ -58,14 +58,9 @@ def data_cleaner() -> Tuple[pd.DataFrame, pd.DataFrame]:
     return complete_df, imputed_df
 
 
-def store_cleaned_data(complete_df: pd.DataFrame, imputed_df: pd.DataFrame):
-    """
-    Function for writing processed csv's to local.
-    """
-    complete_df.to_csv("./data/processed/complete_df.csv")
-    imputed_df.to_csv("./data/processed/imputed_df.csv")
-
-
 if __name__ == "__main__":
     complete, imputed = data_cleaner()
-    store_cleaned_data(complete, imputed)
+
+    # store dfs to local
+    complete.to_csv("./data/processed/complete_df.csv")
+    imputed.to_csv("./data/processed/imputed_df.csv")
