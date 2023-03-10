@@ -39,7 +39,7 @@ def data_cleaner() -> Tuple[pd.DataFrame, pd.DataFrame]:
             ]
 
     # drop the two records with erroneous entry for feature_6
-    raw_df = raw_df[raw_df['feature_6'].apply(
+    raw_df = raw_df[~raw_df['feature_6'].apply(
         lambda x: '.' in x)].reset_index(drop=True)
 
     # complete df
