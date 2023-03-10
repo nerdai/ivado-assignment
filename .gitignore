@@ -11,3 +11,6 @@ artifacts/
 
 # python cache
 */__pycache__
+
+# pylint
+pylintrc
