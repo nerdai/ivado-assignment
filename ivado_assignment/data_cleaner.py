@@ -17,6 +17,21 @@ import numpy as np
 import pandas as pd
 
 
+RAW_DATA_FILE = "./data/raw/2021-10-19_14-11-08_val_candidate_data.csv"
+CONTS = ['feature_5', 'feature_6', 'feature_7']
+CATS = ['feature_0',
+        'feature_1',
+        'feature_2',
+        'feature_3',
+        'feature_4',
+        'feature_10',
+        'feature_11',
+        'feature_12',
+        'feature_8',
+        'feature_9'
+        ]
+
+
 def data_cleaner() -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     This module method takes the raw data, applies the cleaning steps
@@ -24,19 +39,7 @@ def data_cleaner() -> Tuple[pd.DataFrame, pd.DataFrame]:
         1. complete_df: for a complete-case analysis
         2. imputed_df: which imputes the missing variables
     """
-    raw_df = pd.read_csv("./data/2021-10-19_14-11-08_val_candidate_data.csv")
-    conts = ['feature_5', 'feature_6', 'feature_7']
-    cats = ['feature_0',
-            'feature_1',
-            'feature_2',
-            'feature_3',
-            'feature_4',
-            'feature_10',
-            'feature_11',
-            'feature_12',
-            'feature_8',
-            'feature_9'
-            ]
+    raw_df = pd.read_csv(RAW_DATA_FILE)
 
     # drop the two records with erroneous entry for feature_6
     raw_df = raw_df[~raw_df['feature_6'].apply(
@@ -48,19 +51,26 @@ def data_cleaner() -> Tuple[pd.DataFrame, pd.DataFrame]:
     # imputed df
     imputed_df = raw_df.copy()
     # imputing missing categorical features
-    for feat in cats:
+    for feat in CATS:
         imputed_df[feat] = pd.Categorical(imputed_df[feat].fillna('missing'))
     # imputing missing numerical features
-    for feat in conts:
+    for feat in CONTS:
         mean = np.mean(imputed_df[feat])
         imputed_df[feat] = imputed_df[feat].fillna(mean)
 
     return complete_df, imputed_df
 
 
-if __name__ == "__main__":
+def main():
+    """
+    Main method containing logic for this script.
+    """
     complete, imputed = data_cleaner()
 
     # store dfs to local
     complete.to_csv("./data/processed/complete_df.csv")
     imputed.to_csv("./data/processed/imputed_df.csv")
+
+
+if __name__ == "__main__":
+    main()
