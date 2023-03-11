@@ -8,22 +8,7 @@ by the EDA. In particular:
 from typing import Tuple
 import numpy as np
 import pandas as pd
-
-
-RAW_DATA_FILE = "./data/raw/2021-10-19_14-11-08_val_candidate_data.csv"
-CONTS = ['feature_5', 'feature_6', 'feature_7']
-CATS = ['feature_0',
-        'feature_1',
-        'feature_2',
-        'feature_3',
-        'feature_4',
-        'feature_10',
-        'feature_11',
-        'feature_12',
-        'feature_8',
-        'feature_9'
-        ]
-TARGET = 'target'
+from ivado_assignment.config import config
 
 
 def data_cleaner() -> Tuple[pd.DataFrame, pd.DataFrame]:
@@ -33,16 +18,17 @@ def data_cleaner() -> Tuple[pd.DataFrame, pd.DataFrame]:
         1. complete_df: for a complete-case analysis
         2. incomplete_df: contains incomplete observations to be imputed
     """
-    incomplete_df = pd.read_csv(RAW_DATA_FILE)
+    incomplete_df = pd.read_csv(config.data_file)
 
     # drop the two records with erroneous entry for feature_6
     incomplete_df = incomplete_df[~incomplete_df['feature_6'].apply(
         lambda x: '.' in x)].reset_index(drop=True)
 
     # cast to correct data types
-    for feat in CATS + [TARGET]:
+    for feat in config.categorical + [config.target]:
         incomplete_df[feat] = pd.Categorical(incomplete_df[feat])
-    incomplete_df[TARGET] = incomplete_df[TARGET].cat.codes  # Y = 1; N = 0
+    incomplete_df[config.target] = incomplete_df[config.target].cat.codes
+                                                            # Y = 1; N = 0
 
     # complete df
     complete_df = incomplete_df[~incomplete_df.isna().any(

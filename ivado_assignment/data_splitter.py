@@ -28,7 +28,6 @@ def split(df: pd.DataFrame, split_fracs=(0.75, 0.25), seed=42) -> \
 
     Returns two pd.DataFrames: train, test
     """
-    print(f"split_fracs: {split_fracs}")
     assert sum(split_fracs) == 1
     train, test = np.split(df.sample(frac=1, random_state=seed),  # pylint: disable=unbalanced-tuple-unpacking
                                 [int(split_fracs[0]*len(df))])
