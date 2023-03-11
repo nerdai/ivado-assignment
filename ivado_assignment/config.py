@@ -2,12 +2,7 @@
 Configuration for the assignment.
 """
 
-
-class DotDict(dict):
-    """dot.notation access to dictionary attributes"""
-    __getattr__ = dict.get
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__
+from ivado_assignment.dot_dict import DotDict
 
 
 config = DotDict({
@@ -19,7 +14,7 @@ config = DotDict({
                     'feature_3',
                     'feature_4',
                     'feature_8',
-                    'feature_9'
+                    'feature_9',
                     'feature_10',
                     'feature_11',
                     'feature_12',
