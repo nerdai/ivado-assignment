@@ -18,11 +18,11 @@ config = DotDict({
                     'feature_2',
                     'feature_3',
                     'feature_4',
+                    'feature_8',
+                    'feature_9'
                     'feature_10',
                     'feature_11',
                     'feature_12',
-                    'feature_8',
-                    'feature_9'
                     ],
     'target': 'target'
 })
