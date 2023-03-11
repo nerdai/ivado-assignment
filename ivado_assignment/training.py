@@ -14,6 +14,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from skopt import BayesSearchCV
+from ivado_assignment.models import model_setting_1
 
 
 def train():
@@ -23,21 +24,8 @@ def train():
     for feat in config.categorical:
         train[feat] = pd.Categorical(train[feat].astype(str))
 
-    numeric_transformer = Pipeline(steps=[
-        ('imputer', SimpleImputer(strategy='median')),
-    ])
-
-    categorical_transformer = Pipeline(steps=[
-        ('imputer', SimpleImputer(strategy='constant', fill_value='missing')),
-        ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))])
-
-    preprocessor = ColumnTransformer(
-        transformers=[
-            ('num', numeric_transformer, config.numeric),
-            ('cat', categorical_transformer, config.categorical)])
-
-    model = Pipeline(steps=[('preprocessor', preprocessor),
-                            ('clf', BalancedRandomForestClassifier(random_state=42))])
+    model = Pipeline(steps=[('preprocessor', model_setting_1.preprocessing),
+                            ('clf', model_setting_1.models_to_test[0])])
 
     parameters = {
         "clf__n_estimators": [25, 50, 100]
@@ -48,10 +36,10 @@ def train():
                         scoring=metrics.make_scorer(metrics.f1_score, pos_label=0),
                         n_iter=20, cv=4)
 
-    bayes.fit(train[config.categorical + config.numeric], train[config.target])
+    bayes.fit(train[config.categorical + config.numerical], train[config.target])
 
     # metrics
-    preds = bayes.predict(train[config.categorical + config.numeric])
+    preds = bayes.predict(train[config.categorical + config.numerical])
     print(metrics.classification_report(train[config.target], preds))
 
     # save model
