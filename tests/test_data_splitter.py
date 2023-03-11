@@ -15,9 +15,8 @@ def test_result_shapes():
        'A': np.arange(1,101),
        'B': np.arange(1,101)*2
     })
-    train, test, val = split(dummy)
+    train, test = split(dummy)
     print(train.head())
-    exp = [(60, 2), (20, 2), (20, 2)]
+    exp = [(75, 2), (25, 2)]
     assert train.shape == exp[0]
     assert test.shape == exp[1]
-    assert val.shape == exp[2]
