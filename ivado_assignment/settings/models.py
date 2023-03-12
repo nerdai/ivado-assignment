@@ -21,9 +21,11 @@ class ModelSettings:
         "clf__n_estimators": [25, 50, 100]
     }
 
-    def __init__(self, transformers, selection_criteria):
+    def __init__(self, transformers, selection_criteria, train_path, name):
         self.transformers = transformers
         self.model_selection_critiera = selection_criteria
+        self.train_path = train_path
+        self.name = name 
         self.set_preprocessing()
 
     def set_preprocessing(self):
@@ -50,7 +52,7 @@ class ModelSettings:
         self.preprocessing = preprocessor
 
 
-model_setting_1 = ModelSettings(
+imputed = ModelSettings(
     transformers=DotDict({
         "numerical": Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='median')),
@@ -59,5 +61,23 @@ model_setting_1 = ModelSettings(
             ('imputer', SimpleImputer(strategy='constant', fill_value='missing')),
             ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))])
     }),
-    selection_criteria=metrics.make_scorer(metrics.f1_score, pos_label=0)
+    selection_criteria=metrics.make_scorer(metrics.f1_score, pos_label=0),
+    train_path='./data/splits/incomplete_df/train.csv',
+    name="imputed"
 )
+
+complete = ModelSettings(
+    transformers=DotDict({
+        "numerical": None,
+        "categorical":  Pipeline(steps=[
+            ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))])
+    }),
+    selection_criteria=metrics.make_scorer(metrics.f1_score, pos_label=0),
+    train_path='./data/splits/complete_df/train.csv',
+    name="complete"
+)
+
+model_settings = DotDict({
+    'imputed': imputed,
+    'complete': complete
+})

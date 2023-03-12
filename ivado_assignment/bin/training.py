@@ -2,6 +2,7 @@
 TODO
 """
 
+import argparse
 from pathlib import Path
 from joblib import dump
 import pandas as pd
@@ -9,28 +10,39 @@ from ivado_assignment.settings.data import config
 from sklearn.metrics import classification_report
 from sklearn.pipeline import Pipeline
 from skopt import BayesSearchCV
-from ivado_assignment.settings.models import model_setting_1
+from ivado_assignment.settings.models import model_settings
 from ivado_assignment.utils.data_loader import load_and_prep
 import warnings
 
+parser = argparse.ArgumentParser(
+    prog='IVADA take home assignment',
+    description='Trains the model according to the configured settings.'
+)
+parser.add_argument('--setting', type=str, required=True,
+                    choices=['complete', 'imputed'],
+                    help='path to test data csv')
+
 
 def train():
+    args = parser.parse_args()
+
     # load data
-    train = load_and_prep("./data/splits/incomplete_df/train.csv")
+    train = load_and_prep(model_settings[args.setting].train_path)
 
     # lightweight autoML
     best_model = None
     running_score = 0
-    for clf in model_setting_1.classifiers:
-        model = Pipeline(steps=[('preprocessor', model_setting_1.preprocessing),
+    for clf in model_settings[args.setting].classifiers:
+        model = Pipeline(steps=[('preprocessor', model_settings[args.setting].preprocessing),
                                 ('clf', clf)])
         bayes = BayesSearchCV(model,
-                              search_spaces=model_setting_1.hyperparams,
-                              scoring=model_setting_1.model_selection_critiera,
+                              search_spaces=model_settings[args.setting].hyperparams,
+                              scoring=model_settings[args.setting].model_selection_critiera,
                               n_iter=20, cv=4)
         bayes.fit(train[config.categorical + config.numerical],
-                train[config.target])
-        print(f"clf: {clf.__class__.__name__}, best_score: {bayes.best_score_}, best_params: {bayes.best_params_}")
+                  train[config.target])
+        print(
+            f"clf: {clf.__class__.__name__}, best_score: {bayes.best_score_}, best_params: {bayes.best_params_}")
         if running_score < bayes.best_score_:
             running_score = bayes.best_score_
             best_model = bayes.best_estimator_
@@ -42,7 +54,7 @@ def train():
 
     # save model
     parent_dir = Path().resolve()
-    dump(best_model, f'{parent_dir}/artifacts/models/model.joblib')
+    dump(best_model, f'{parent_dir}/artifacts/models/{model_settings[args.setting].name}-model.joblib')
 
 
 if __name__ == "__main__":
