@@ -21,15 +21,16 @@ For reproducing the model and the results, one can build the docker image
 associated with the `Dockerfile` and the code herein. What follows below are
 the steps required to build the model and produce predictions and get its
 associated metrics against the respective `test` set. Note all commands are
-expected to run while in the main folder of this repo.
+expected to run while in the main folder of this repo and that it is assumed
+that `docker-cli` has been installed.
 
 #### Step 0: Clone the contents of this repository
-ssh:
+`ssh`:
 ```
 git clone git@github.com:nerdai/ivado-assignment.git
 ```
 
-https:
+`https`:
 ```
 git clone https://github.com/nerdai/ivado-assignment.git
 ```
@@ -48,6 +49,7 @@ use to:
 - train a model on the training set
 - use the model to predict on the test set
 - obtain the metrics of the model
+
 *Note: we perform two analyses here: a complete-case analysis and one where
 missing observations are imputed by a specified strategy.*
 
