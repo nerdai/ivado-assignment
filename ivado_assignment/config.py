@@ -16,7 +16,7 @@ config = {
                     'feature_8',
                     'feature_9',
                     'feature_10',
-                    'feature_12',
+                    # 'feature_12',
                     ],
     'categorical_levels': {
         'feature_0': [
@@ -69,11 +69,11 @@ config = {
             'Semiurban',
             'Urban'
         ],
-        'feature_12': [
-            'No',
-            'Yes',
-            'missing'
-        ]
+        # 'feature_12': [
+        #     'No',
+        #     'Yes',
+        #     'missing'
+        # ]
     },
     'target': 'target'
 }
