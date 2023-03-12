@@ -10,13 +10,13 @@ from sklearn.metrics import classification_report
 from sklearn.pipeline import Pipeline
 from skopt import BayesSearchCV
 from ivado_assignment.settings.models import model_setting_1
-from ivado_assignment.utils.data_loader import data_loader
+from ivado_assignment.utils.data_loader import load_and_prep
 import warnings
 
 
 def train():
     # load data
-    train = data_loader("./data/splits/incomplete_df/train.csv")
+    train = load_and_prep("./data/splits/incomplete_df/train.csv")
 
     # lightweight autoML
     best_model = None

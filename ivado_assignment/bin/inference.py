@@ -9,7 +9,7 @@ import pandas as pd
 from pathlib import Path
 from joblib import load
 from ivado_assignment.settings.data import config
-from ivado_assignment.utils.data_loader import data_loader
+from ivado_assignment.utils.data_loader import load_and_prep
 
 parser = argparse.ArgumentParser(
     prog='IVADA take home assignment',
@@ -27,7 +27,7 @@ def inference():
     """
     # load data
     args = parser.parse_args()
-    test_df = data_loader(args.data)
+    test_df = load_and_prep(args.data)
 
     # load & run model
     parent_dir = Path().resolve()
