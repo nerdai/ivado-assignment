@@ -27,6 +27,8 @@ def inference():
     # load data
     args = parser.parse_args()
     test_df = pd.read_csv(args.data)
+    for feat in config.categorical:
+        test_df[feat] = pd.Categorical(test_df[feat].astype(str))
 
     # load & run model
     parent_dir = Path().resolve()
