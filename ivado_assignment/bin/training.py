@@ -61,7 +61,8 @@ best_params: {bayes.best_params_}")
     # save model
     parent_dir = Path().resolve()
     dump(best_model,
-         f'{parent_dir}/artifacts/models/{model_settings[args.setting].name}-model.joblib')
+         f'{parent_dir}/artifacts/models/{model_settings[args.setting].name}\
+-model.joblib')
 
 
 if __name__ == "__main__":

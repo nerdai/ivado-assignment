@@ -8,6 +8,7 @@ ivado_assignment.settings.data.config
 """
 
 
+from typing import Dict
 from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import f1_score, make_scorer
@@ -16,7 +17,6 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.impute import SimpleImputer
 from ivado_assignment.settings.data import config
-from ivado_assignment.utils.dot_dict import DotDict
 
 
 class ModelSettings:  # pylint: disable=too-few-public-methods
@@ -37,7 +37,13 @@ class ModelSettings:  # pylint: disable=too-few-public-methods
         "clf__n_estimators": [25, 50, 100]
     }
 
-    def __init__(self, transformers, selection_criteria, train_path, name):
+    def __init__(
+        self,
+        transformers: Dict,
+        selection_criteria: callable,
+        train_path: str,
+        name: str
+    ):
         self.transformers = transformers
         self.model_selection_critiera = selection_criteria
         self.train_path = train_path
@@ -49,39 +55,39 @@ class ModelSettings:  # pylint: disable=too-few-public-methods
         The method to set the preprocessing pipeline from the specified
         transformers for both numerical and categorical features.
         """
-        if ((self.transformers.numerical is not None)
-                and (self.transformers.categorical is not None)):
+        if ((self.transformers['numerical'] is not None)
+                and (self.transformers['categorical'] is not None)):
             preprocessor = ColumnTransformer(
                 transformers=[
                     (
                         'num',
-                        self.transformers.numerical,
+                        self.transformers['numerical'],
                         config['numerical']
                     ),
                     (
                         'cat',
-                        self.transformers.categorical,
+                        self.transformers['categorical'],
                         config['categorical']
                     )
                 ]
             )
-        elif self.transformers.numerical is None:
+        elif self.transformers['numerical'] is None:
             preprocessor = ColumnTransformer(
                 transformers=[
                     (
                         'cat',
-                        self.transformers.categorical,
+                        self.transformers['categorical'],
                         config['categorical']
                     )
                 ],
                 remainder='passthrough'
             )
-        elif self.transformers.categorical is None:
+        elif self.transformers['categorical'] is None:
             preprocessor = ColumnTransformer(
                 transformers=[
                     (
                         'num',
-                        self.transformers.numerical,
+                        self.transformers['numerical'],
                         config['numerical']
                     )
                 ],
@@ -93,7 +99,7 @@ class ModelSettings:  # pylint: disable=too-few-public-methods
 
 
 imputed = ModelSettings(
-    transformers=DotDict({
+    transformers={
         "numerical": Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='median')),
         ]),
@@ -101,24 +107,24 @@ imputed = ModelSettings(
             ('imputer',
                 SimpleImputer(strategy='constant', fill_value='missing')),
             ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))])
-    }),
+    },
     selection_criteria=make_scorer(f1_score, pos_label=0),
     train_path='./data/splits/incomplete_df/train.csv',
     name="imputed"
 )
 
 complete = ModelSettings(
-    transformers=DotDict({
+    transformers={
         "numerical": None,
         "categorical":  Pipeline(steps=[
             ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))])
-    }),
+    },
     selection_criteria=make_scorer(f1_score, pos_label=0),
     train_path='./data/splits/complete_df/train.csv',
     name="complete"
 )
 
-model_settings = DotDict({
+model_settings = {
     'imputed': imputed,
     'complete': complete
-})
+}

@@ -14,6 +14,6 @@ def load_and_prep(csv_path: str) -> pd.DataFrame:
     [] pd.DataFrame
     """
     df = pd.read_csv(csv_path)
-    for feat in config.categorical:
+    for feat in config['categorical']:
         df[feat] = pd.Categorical(df[feat].astype(str))
     return df
