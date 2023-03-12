@@ -5,7 +5,7 @@ as well as predictions data files.
 
 import argparse
 import pandas as pd
-from ivado_assignment.config import config
+from ivado_assignment.settings.data import config
 from sklearn import metrics
 
 parser = argparse.ArgumentParser(

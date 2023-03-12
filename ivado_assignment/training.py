@@ -5,11 +5,11 @@ TODO
 from pathlib import Path
 from joblib import dump
 import pandas as pd
-from ivado_assignment.config import config
+from ivado_assignment.settings.data import config
 from sklearn.metrics import classification_report
 from sklearn.pipeline import Pipeline
 from skopt import BayesSearchCV
-from ivado_assignment.models import model_setting_1
+from ivado_assignment.settings.models import model_setting_1
 import warnings
 
 

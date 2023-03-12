@@ -8,7 +8,7 @@ by the EDA. In particular:
 from typing import Tuple
 import numpy as np
 import pandas as pd
-from ivado_assignment.config import config
+from ivado_assignment.settings.data import config
 
 
 def data_cleaner() -> Tuple[pd.DataFrame, pd.DataFrame]:

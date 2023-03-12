@@ -2,7 +2,7 @@
 Configuration for the assignment.
 """
 
-from ivado_assignment.dot_dict import DotDict
+from ivado_assignment.utils.dot_dict import DotDict
 
 
 config = {

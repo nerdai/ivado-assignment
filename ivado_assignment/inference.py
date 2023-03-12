@@ -8,7 +8,7 @@ import argparse
 import pandas as pd
 from pathlib import Path
 from joblib import load
-from ivado_assignment.config import config
+from ivado_assignment.settings.data import config
 
 parser = argparse.ArgumentParser(
     prog='IVADA take home assignment',

@@ -4,7 +4,7 @@ Unit tests data_splitter script
 
 import numpy as np
 import pandas as pd
-from ivado_assignment.data_splitter import split
+from ivado_assignment.data_processors.splitter import split
 
 
 def test_result_shapes():

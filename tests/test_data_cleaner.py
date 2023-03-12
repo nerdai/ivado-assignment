@@ -2,7 +2,7 @@
 Unit tests data_cleaner script
 """
 
-from ivado_assignment.data_cleaner import data_cleaner
+from ivado_assignment.data_processors.cleaner import data_cleaner
 
 
 def test_result_shapes():

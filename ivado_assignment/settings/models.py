@@ -1,5 +1,5 @@
 
-from ivado_assignment.config import config
+from ivado_assignment.settings.data import config
 from sklearn.compose import ColumnTransformer
 from sklearn import metrics
 from sklearn.pipeline import Pipeline
@@ -7,7 +7,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.impute import SimpleImputer
-from ivado_assignment.dot_dict import DotDict
+from ivado_assignment.utils.dot_dict import DotDict
 
 
 class ModelSettings:
