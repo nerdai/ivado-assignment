@@ -2,9 +2,6 @@
 Configuration for the assignment.
 """
 
-from ivado_assignment.utils.dot_dict import DotDict
-
-
 config = {
     'data_file': "./data/raw/2021-10-19_14-11-08_val_candidate_data.csv",
     'id_col': 'Unnamed: 0',
@@ -17,7 +14,6 @@ config = {
                     'feature_8',
                     'feature_9',
                     'feature_10',
-                    # 'feature_12',
                     ],
     'categorical_levels': {
         'feature_0': [
@@ -70,12 +66,6 @@ config = {
             'Semiurban',
             'Urban'
         ],
-        # 'feature_12': [
-        #     'No',
-        #     'Yes',
-        #     'missing'
-        # ]
     },
     'target': 'target'
 }
-config = DotDict(config)
