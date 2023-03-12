@@ -5,7 +5,6 @@ The predictions are saved as .csv in local.
 """
 
 import argparse
-import pandas as pd
 from pathlib import Path
 from joblib import load
 from ivado_assignment.settings.data import config
@@ -26,8 +25,8 @@ parser.add_argument('--setting', type=str, required=True,
 
 def inference():
     """
-    Function responsible for training the ML model and storing the artifact
-    binary for later use.
+    Function responsible for performing inference on a previously trained
+    model. The loaded model is specified through the command line argument.
     """
     # load data
     args = parser.parse_args()
@@ -35,16 +34,20 @@ def inference():
 
     # load & run model
     parent_dir = Path().resolve()
-    model = load(f'{parent_dir}/artifacts/models/{model_settings[args.setting].name}-model.joblib')
-    preds = model.predict(test_df[config.categorical + config.numerical])
+    model = load(
+        f'{parent_dir}/artifacts/models/{model_settings[args.setting].name}\
+-model.joblib')
+    preds = model.predict(test_df[config['categorical'] + config['numerical']])
     preds_proba = model.predict_proba(
-        test_df[config.categorical + config.numerical])[:, 1]
+        test_df[config['categorical'] + config['numerical']])[:, 1]
 
     # save preds
     test_df["pred"] = preds
     test_df["pred_proba"] = preds_proba
-    test_df[[config.id_col] + ["pred", "pred_proba"]].to_csv(
-        f"./artifacts/preds/{model_settings[args.setting].name}-predictions.csv", index=False)
+    test_df[[config['id_col']] + ["pred", "pred_proba"]].to_csv(
+        f"./artifacts/preds/{model_settings[args.setting].name}-predictions.csv",
+        index=False
+    )
 
 
 if __name__ == "__main__":
