@@ -7,6 +7,7 @@ from ivado_assignment.utils.dot_dict import DotDict
 
 config = {
     'data_file': "./data/raw/2021-10-19_14-11-08_val_candidate_data.csv",
+    'id_col': 'Unnamed: 0',
     'numerical': ['feature_5', 'feature_6', 'feature_7'],
     'categorical': ['feature_0',
                     'feature_1',

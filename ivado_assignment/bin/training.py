@@ -20,7 +20,7 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument('--setting', type=str, required=True,
                     choices=['complete', 'imputed'],
-                    help='path to test data csv')
+                    help='setting of complete-case or imputed analysis') 
 
 
 def train():

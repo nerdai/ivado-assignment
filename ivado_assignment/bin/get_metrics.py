@@ -26,16 +26,17 @@ def produce_report():
     """
     # load data
     args = parser.parse_args()
-    labels = pd.read_csv(args.labels)[['Unnamed: 0', 'target']]
+    labels = pd.read_csv(args.labels)[[config.id_col, config.target]]
     preds = pd.read_csv(args.preds)
 
     # metrics
-    results = pd.merge(preds, labels, on="Unnamed: 0")
+    results = pd.merge(preds, labels, on=config.id_col)
     print(metrics.classification_report(results[config.target], results.pred))
     print("Confusion:\n", metrics.confusion_matrix(results[config.target], results.pred), "\n")
     print("ROC-AUC: ", metrics.roc_auc_score(results[config.target], results.pred_proba))
     print("Log loss: ", metrics.log_loss(results[config.target], results.pred_proba))
     print("Brier: ", metrics.brier_score_loss(results[config.target], results.pred_proba))
+    print("F1 Score:", metrics.f1_score(results[config.target], results.pred))
 
 if __name__ == "__main__":
     produce_report()
