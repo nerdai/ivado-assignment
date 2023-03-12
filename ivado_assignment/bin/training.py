@@ -3,6 +3,7 @@ TODO
 """
 
 import argparse
+import logging
 import warnings
 from pathlib import Path
 from joblib import dump
@@ -28,41 +29,69 @@ def train():
     binary for later use.
     """
     args = parser.parse_args()
+    setting = model_settings[args.setting]
+    logging.basicConfig(
+        filename=f'./artifacts/training_logs/{setting.name}.log',
+        filemode='w',
+        format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+        datefmt='%H:%M:%S',
+        level=logging.DEBUG
+    )
+    logger = (logging
+              .getLogger(f'lightweight autoML [{setting.name}]')
+              )
 
     # load data
-    train_df = load_and_prep(model_settings[args.setting].train_path)
+    train_df = load_and_prep(setting.train_path)
+    logger.info("loaded training data with shape: %s", train_df.shape)
 
     # lightweight autoML
     best_model = None
     running_score = 0
-    for clf in model_settings[args.setting].classifiers:
-        model = Pipeline(steps=[('preprocessor', model_settings[args.setting].preprocessing),
-                                ('clf', clf)])
-        bayes = BayesSearchCV(model,
-                              search_spaces=model_settings[args.setting].hyperparams,
-                              scoring=model_settings[args.setting].model_selection_critiera,
-                              n_iter=20, cv=4)
+    logger.info("beginning model selection")
+    for clf in setting.classifiers:
+        model = Pipeline(
+            steps=[
+                ('preprocessor', setting.preprocessing),
+                ('clf', clf)
+            ]
+        )
+        bayes = BayesSearchCV(
+            model,
+            search_spaces=setting.hyperparams,
+            scoring=setting.model_selection_critiera,
+            n_iter=20, cv=4
+        )
         bayes.fit(train_df[config['categorical'] + config['numerical']],
                   train_df[config['target']])
-        print(
-            f"clf: {clf.__class__.__name__}, \
-best_score: {bayes.best_score_}, \
-best_params: {bayes.best_params_}")
+        logger.info(
+            "clf: %s, best_score: %s, best_params: %s",
+            clf.__class__.__name__,
+            bayes.best_score_,
+            bayes.best_params_
+        )
         if running_score < bayes.best_score_:
             running_score = bayes.best_score_
             best_model = bayes.best_estimator_
-    print(best_model.named_steps.clf.__class__.__name__)
+    logger.info(
+        "best model: %s",
+        best_model.named_steps.clf.__class__.__name__
+    )
 
     # metrics
     preds = best_model.predict(
         train_df[config['categorical'] + config['numerical']])
-    print(classification_report(train_df[config['target']], preds))
+    logger.info(
+        "\n%s",
+        classification_report(train_df[config['target']], preds)
+    )
 
     # save model
     parent_dir = Path().resolve()
     dump(best_model,
-         f'{parent_dir}/artifacts/models/{model_settings[args.setting].name}\
+         f'{parent_dir}/artifacts/models/{setting.name}\
 -model.joblib')
+    logger.info("successfully saved best model")
 
 
 if __name__ == "__main__":
