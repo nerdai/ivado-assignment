@@ -6,7 +6,6 @@ by the EDA. In particular:
 """
 
 from typing import Tuple
-import numpy as np
 import pandas as pd
 from ivado_assignment.settings.data import config
 
@@ -18,16 +17,16 @@ def data_cleaner() -> Tuple[pd.DataFrame, pd.DataFrame]:
         1. complete_df: for a complete-case analysis
         2. incomplete_df: contains incomplete observations to be imputed
     """
-    incomplete_df = pd.read_csv(config.data_file)
+    incomplete_df = pd.read_csv(config['data_file'])
 
     # drop the two records with erroneous entry for feature_6
     incomplete_df = incomplete_df[~incomplete_df['feature_6'].apply(
         lambda x: '.' in x)].reset_index(drop=True)
 
     # cast to correct data types
-    for feat in config.categorical + [config.target]:
+    for feat in config['categorical'] + [config['target']]:
         incomplete_df[feat] = pd.Categorical(incomplete_df[feat])
-    incomplete_df[config.target] = incomplete_df[config.target].cat.codes
+    incomplete_df[config['target']] = incomplete_df[config['target']].cat.codes
                                                             # Y = 1; N = 0
 
     # complete df
