@@ -12,7 +12,7 @@ from typing import Dict
 from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import brier_score_loss, f1_score, make_scorer
+from sklearn.metrics import f1_score, make_scorer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
