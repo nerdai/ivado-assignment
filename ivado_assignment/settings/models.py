@@ -11,6 +11,7 @@ ivado_assignment.settings.data.config
 from typing import Dict
 from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score, make_scorer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
@@ -28,24 +29,49 @@ class ModelSettings:  # pylint: disable=too-few-public-methods
         - and preprocessing pipeline for categorical and numerical features
     """
     seed = 42
-    classifiers = [
-        BalancedRandomForestClassifier(random_state=seed),
-        RandomForestClassifier(random_state=seed),
-        GradientBoostingClassifier(random_state=seed)
+    classifiers_and_hyperparms = [
+        (
+            LogisticRegression(random_state=42, penalty='l2'),
+            {
+                "clf__C": [1., 0.99, 0.98, 0.97, 0.96, 0.95]
+            }
+        ),
+        (
+            BalancedRandomForestClassifier(random_state=seed),
+            {
+                "clf__n_estimators": [25, 50, 100],
+                "clf__ccp_alpha": [0., 0.01, 0.02, 0.03, 0.04, 0.05]
+            }
+        ),
+        (
+            RandomForestClassifier(random_state=seed),
+            {
+                "clf__n_estimators": [25, 50, 100],
+                "clf__ccp_alpha": [0., 0.01, 0.02, 0.03, 0.04, 0.05]
+            }
+        ),
+        (
+            GradientBoostingClassifier(random_state=seed),
+            {
+                "clf__n_estimators": [25, 50, 100],
+                "clf__ccp_alpha": [0., 0.01, 0.02, 0.03, 0.04, 0.05]
+            }
+        ),
     ]
-    hyperparams = {
-        "clf__n_estimators": [25, 50, 100]
-    }
 
     def __init__(
         self,
         transformers: Dict,
         selection_criteria: callable,
+        selection_criteria_comparator: callable,  # min or max
+        selection_criteria_default: int,
         train_path: str,
         name: str
     ):
         self.transformers = transformers
         self.model_selection_critiera = selection_criteria
+        self.selection_comparator = selection_criteria_comparator
+        self.selection_default = selection_criteria_default
         self.train_path = train_path
         self.name = name
         self.set_preprocessing()
@@ -109,6 +135,8 @@ imputed = ModelSettings(
             ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))])
     },
     selection_criteria=make_scorer(f1_score, pos_label=0),
+    selection_criteria_comparator=max,
+    selection_criteria_default=float('-inf'),
     train_path='./data/splits/incomplete_df/train.csv',
     name="imputed"
 )
@@ -120,6 +148,8 @@ complete = ModelSettings(
             ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))])
     },
     selection_criteria=make_scorer(f1_score, pos_label=0),
+    selection_criteria_comparator=max,
+    selection_criteria_default=float('-inf'),
     train_path='./data/splits/complete_df/train.csv',
     name="complete"
 )

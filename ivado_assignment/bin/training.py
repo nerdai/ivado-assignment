@@ -49,9 +49,9 @@ def train():
 
     # lightweight autoML
     best_model = None
-    running_score = 0
+    running_score = setting.selection_default
     logger.info("beginning model selection")
-    for clf in setting.classifiers:
+    for clf, hyperparams in setting.classifiers_and_hyperparms:
         model = Pipeline(
             steps=[
                 ('preprocessor', setting.preprocessing),
@@ -60,7 +60,7 @@ def train():
         )
         bayes = BayesSearchCV(
             model,
-            search_spaces=setting.hyperparams,
+            search_spaces=hyperparams,
             scoring=setting.model_selection_critiera,
             n_iter=20, cv=4
         )
@@ -72,7 +72,10 @@ def train():
             bayes.best_score_,
             bayes.best_params_
         )
-        if running_score < bayes.best_score_:
+        if running_score != setting.selection_comparator(
+            running_score,
+            bayes.best_score_
+        ):
             running_score = bayes.best_score_
             best_model = bayes.best_estimator_
     logger.info(
