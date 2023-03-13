@@ -11,7 +11,7 @@ ivado_assignment.settings.data.config
 from typing import Dict
 from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import f1_score, make_scorer
+from sklearn.metrics import brier_score_loss, f1_score, make_scorer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
@@ -32,19 +32,22 @@ class ModelSettings:  # pylint: disable=too-few-public-methods
         (
             BalancedRandomForestClassifier(random_state=seed),
             {
-                "clf__n_estimators": [25, 50, 100]
+                "clf__n_estimators": [25, 50, 100],
+                "clf__ccp_alpha": [0., 0.01, 0.02, 0.03, 0.04, 0.05]
             }
         ),
         (
             RandomForestClassifier(random_state=seed),
             {
-                "clf__n_estimators": [25, 50, 100]
+                "clf__n_estimators": [25, 50, 100],
+                "clf__ccp_alpha": [0., 0.01, 0.02, 0.03, 0.04, 0.05]
             }
         ),
         (
             GradientBoostingClassifier(random_state=seed),
             {
-                "clf__n_estimators": [25, 50, 100]
+                "clf__n_estimators": [25, 50, 100],
+                "clf__ccp_alpha": [0., 0.01, 0.02, 0.03, 0.04, 0.05]
             }
         ),
     ]
@@ -53,11 +56,15 @@ class ModelSettings:  # pylint: disable=too-few-public-methods
         self,
         transformers: Dict,
         selection_criteria: callable,
+        selection_criteria_comparator: callable,  # min or max
+        selection_criteria_default: int,
         train_path: str,
         name: str
     ):
         self.transformers = transformers
         self.model_selection_critiera = selection_criteria
+        self.selection_comparator = selection_criteria_comparator
+        self.selection_default = selection_criteria_default
         self.train_path = train_path
         self.name = name
         self.set_preprocessing()
@@ -120,7 +127,9 @@ imputed = ModelSettings(
                 SimpleImputer(strategy='constant', fill_value='missing')),
             ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))])
     },
-    selection_criteria=make_scorer(f1_score, pos_label=0),
+    selection_criteria=make_scorer(brier_score_loss, pos_label=0),
+    selection_criteria_comparator=min,
+    selection_criteria_default=float('inf'),
     train_path='./data/splits/incomplete_df/train.csv',
     name="imputed"
 )
@@ -132,6 +141,8 @@ complete = ModelSettings(
             ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))])
     },
     selection_criteria=make_scorer(f1_score, pos_label=0),
+    selection_criteria_comparator=min,
+    selection_criteria_default=float('inf'),
     train_path='./data/splits/complete_df/train.csv',
     name="complete"
 )
