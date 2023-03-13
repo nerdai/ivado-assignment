@@ -11,6 +11,7 @@ ivado_assignment.settings.data.config
 from typing import Dict
 from imblearn.ensemble import BalancedRandomForestClassifier
 from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss, f1_score, make_scorer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
@@ -29,6 +30,12 @@ class ModelSettings:  # pylint: disable=too-few-public-methods
     """
     seed = 42
     classifiers_and_hyperparms = [
+        (
+            LogisticRegression(random_state=42, penalty='l2'),
+            {
+                "clf__C": [1., 0.99, 0.98, 0.97, 0.96, 0.95]
+            }
+        ),
         (
             BalancedRandomForestClassifier(random_state=seed),
             {
