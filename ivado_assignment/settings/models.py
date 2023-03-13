@@ -127,9 +127,9 @@ imputed = ModelSettings(
                 SimpleImputer(strategy='constant', fill_value='missing')),
             ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))])
     },
-    selection_criteria=make_scorer(brier_score_loss, pos_label=0),
-    selection_criteria_comparator=min,
-    selection_criteria_default=float('inf'),
+    selection_criteria=make_scorer(f1_score, pos_label=0),
+    selection_criteria_comparator=max,
+    selection_criteria_default=float('-inf'),
     train_path='./data/splits/incomplete_df/train.csv',
     name="imputed"
 )
@@ -141,8 +141,8 @@ complete = ModelSettings(
             ('onehot', OneHotEncoder(handle_unknown='ignore', drop='first'))])
     },
     selection_criteria=make_scorer(f1_score, pos_label=0),
-    selection_criteria_comparator=min,
-    selection_criteria_default=float('inf'),
+    selection_criteria_comparator=max,
+    selection_criteria_default=float('-inf'),
     train_path='./data/splits/complete_df/train.csv',
     name="complete"
 )
