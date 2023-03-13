@@ -210,7 +210,7 @@ BalancedRandomForestClassifier: {
 ```
 
 ### Train Performance
-*(Results are replicated by using the Docker build)*
+*(Results may differ slightly even when using Docker)*
 
 These results can also be viewed in the `artifacts/training_logs` folder.
 `Complete`:
@@ -238,7 +238,7 @@ weighted avg       0.84      0.83      0.82       433
 ```
 
 ### Test Performance
-*(Results are replicated by using the Docker build)*
+*(Results may differ slightly even when using Docker)*
 
 `Complete`:
 ```
