@@ -101,12 +101,9 @@ but similar analyses.
 4. cast feature_8 as a categorical feature
 5. convert feature_8 to a binary feature with level 1 = 360.0 and 0 otherwise
 6. cast feature_9 as a categorical feature
-7. prepare a .csv file with only complete observations for complete-case
-analysis
-8. prepare a .csv data file with both incomplete and complete observations for
-an imputed analysis
-9. target has some imbalance with class N occurring only 31% of the time in the
-data
+7. prepare a .csv file with only complete observations for complete-case analysis
+8. prepare a .csv data file with both incomplete and complete observations for an imputed analysis
+9. target has some imbalance with class N occurring only 31% of the time in the data
 ```
 
 ## Model Build
