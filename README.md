@@ -99,10 +99,14 @@ but similar analyses.
 2. drop feature 11 since same as feature_2
 3. drop feature 12 since same as feature_4
 4. cast feature_8 as a categorical feature
-5. case feature_9 as a categorical feature
-6. prepare a .csv file with only complete observations for complete-case analysis
-7. prepare a .csv data file with both incomplete and complete observations for an imputed analysis
-8. target has some imbalance with class N occurring only 31% of the time in the data
+5. convert feature_8 to a binary feature with level 1 = 360.0 and 0 otherwise
+6. cast feature_9 as a categorical feature
+7. prepare a .csv file with only complete observations for complete-case
+analysis
+8. prepare a .csv data file with both incomplete and complete observations for
+an imputed analysis
+9. target has some imbalance with class N occurring only 31% of the time in the
+data
 ```
 
 ## Model Build
@@ -190,42 +194,42 @@ HyperParameter:
 ```
               precision    recall  f1-score   support
 
-           0       0.63      0.51      0.57        37
-           1       0.77      0.84      0.80        70
+           0       0.78      0.53      0.63        40
+           1       0.77      0.91      0.84        70
 
-    accuracy                           0.73       107
-   macro avg       0.70      0.68      0.68       107
-weighted avg       0.72      0.73      0.72       107
+    accuracy                           0.77       110
+   macro avg       0.77      0.72      0.73       110
+weighted avg       0.77      0.77      0.76       110
 
 Confusion:
- [[19 18]
- [11 59]] 
+ [[21 19]
+ [ 6 64]] 
 
-ROC-AUC:  0.7314671814671815
-Log loss:  0.5551160202214863
-Brier:  0.1878762585669782
-F1 Score: 0.8027210884353742
+ROC-AUC:  0.7678571428571429
+Log loss:  0.5884425412663279
+Brier:  0.19896116163131208
+F1 Score: 0.8366013071895425
 ```
 
 `Imputed`:
 ```
               precision    recall  f1-score   support
 
-           0       0.64      0.40      0.49        45
-           1       0.77      0.90      0.83       100
+           0       0.68      0.38      0.49        45
+           1       0.77      0.92      0.84       100
 
-    accuracy                           0.74       145
-   macro avg       0.71      0.65      0.66       145
-weighted avg       0.73      0.74      0.73       145
+    accuracy                           0.75       145
+   macro avg       0.72      0.65      0.66       145
+weighted avg       0.74      0.75      0.73       145
 
 Confusion:
- [[18 27]
- [10 90]] 
+ [[17 28]
+ [ 8 92]] 
 
-ROC-AUC:  0.7006666666666667
-Log loss:  0.5799618519385159
-Brier:  0.18857150138888887
-F1 Score: 0.8294930875576038
+ROC-AUC:  0.7068888888888889
+Log loss:  0.5475167652779405
+Brier:  0.18115211263885775
+F1 Score: 0.8363636363636363
 ```
 
 ## Model Delivery (Docker)

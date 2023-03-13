@@ -22,6 +22,11 @@ def data_cleaner() -> Tuple[pd.DataFrame, pd.DataFrame]:
     # drop the two records with erroneous entry for feature_6
     incomplete_df = incomplete_df[~incomplete_df['feature_6'].apply(
         lambda x: '.' in x)].reset_index(drop=True)
+    
+    # change feature_8 to a binary one
+    incomplete_df['feature_8'] = incomplete_df['feature_8'].apply(
+        lambda x: x == 360.0
+    ).astype(int)
 
     # cast to correct data types
     for feat in config['categorical'] + [config['target']]:
