@@ -154,8 +154,8 @@ Preprocessing steps were applied uniformly to the type of features. I.e., all
 ### Training
 A (very) lightweight autoML was built and used for training an ML model in both
 the `Imputed` and `Complete` case. Specifically, 3 candidate ML tree-based
-models along with the `n_estimators` hyperparameter formed the search space
-for our model selection.
+models as well as Logistic Regression were tested. In addition, some of their
+hyperparams were tuned using `Bayesian` cross-validation.
 
 #### Dataset Splitting
 After running `ivado_assignment.data_processors.cleaner`, the `splitter` script
@@ -181,12 +181,55 @@ metrics.
 The following tree-based models and their hyperparameters were tested:
 
 Models:
+- `LogisticRegression` (`sklearn`)
 - `RandomForestClassifier` (`sklearn`)
 - `GradientBoostingClassifier` (`sklearn`)
 - `BalancedRandomForestClassifier` (`imblearn`) *uses undersampling*
 
 HyperParameter:
-- `n_estimator`: `[25, 50, 100]`
+```
+LogisticRegression: {
+    "C": [1., 0.99, 0.98, 0.97, 0.96, 0.95]
+},
+RandomForestClassifier: {
+    "n_estimators": [25, 50, 100],
+    "ccp_alpha": [0., 0.01, 0.02, 0.03, 0.04, 0.05]
+},
+GradientBoostingClassifier: {
+    "n_estimators": [25, 50, 100],
+    "ccp_alpha": [0., 0.01, 0.02, 0.03, 0.04, 0.05]
+},
+BalancedRandomForestClassifier: {
+    "n_estimators": [25, 50, 100],
+    "ccp_alpha": [0., 0.01, 0.02, 0.03, 0.04, 0.05]
+},
+```
+
+### Train Performance
+These results can also be viewed in the `artifacts/training_logs` folder.
+`Complete`:
+```
+              precision    recall  f1-score   support
+
+           0       0.90      0.44      0.59        99
+           1       0.80      0.98      0.88       230
+
+    accuracy                           0.82       329
+   macro avg       0.85      0.71      0.74       329
+weighted avg       0.83      0.82      0.80       329
+```
+
+`Imputed`:
+```
+              precision    recall  f1-score   support
+
+           0       0.91      0.52      0.66       138
+           1       0.81      0.98      0.89       295
+
+    accuracy                           0.83       433
+   macro avg       0.86      0.75      0.78       433
+weighted avg       0.84      0.83      0.82       433
+```
 
 ### Test Performance
 
@@ -194,21 +237,21 @@ HyperParameter:
 ```
               precision    recall  f1-score   support
 
-           0       0.78      0.53      0.63        40
-           1       0.77      0.91      0.84        70
+           0       0.92      0.55      0.69        40
+           1       0.79      0.97      0.87        70
 
-    accuracy                           0.77       110
-   macro avg       0.77      0.72      0.73       110
-weighted avg       0.77      0.77      0.76       110
+    accuracy                           0.82       110
+   macro avg       0.85      0.76      0.78       110
+weighted avg       0.84      0.82      0.80       110
 
 Confusion:
- [[21 19]
- [ 6 64]] 
+ [[22 18]
+ [ 2 68]] 
 
-ROC-AUC:  0.7678571428571429
-Log loss:  0.5884425412663279
-Brier:  0.19896116163131208
-F1 Score: 0.8366013071895425
+ROC-AUC:  0.7367857142857143
+Log loss:  0.49842554669486605
+Brier:  0.1559077279967151
+F1 Score: 0.8717948717948717
 ```
 
 `Imputed`:
