@@ -120,6 +120,8 @@ The following processing steps were taken to the original data set file:
 1. The two erroneously entered observations for `feature_6` were removed from
 the dataset;
 2. The `target` field was encoded to numeric with legend `Y=1` and `N=0`.
+3. `feature_8` is converted to a binary categorical feature with `1=360.0` and
+`0` otherwise.
 
 ### Features
 The features that were used in the analysis and which are organized by their
@@ -171,6 +173,11 @@ that the dataset is slight imbalanced, with class `0` or (`N`) being slightly
 underepresented relative to its class counterpart, `1` or (`Y`). This metric
 is understood as best practice for probability predictions even with
 imbalanced data.
+
+**Interestingly, using Brier score as model selection criteria during
+training phase yielded worse results than when using the `F1 score` of only
+the minority class. As such, F1 score is used for model selection, but for
+final evaluation, the Brier score is used.**
 
 It should be noted though, that other metrics could be more suitable, depending
 on the cost of false positives or false negatives on the minority class. The
@@ -274,6 +281,13 @@ Log loss:  0.5475167652779405
 Brier:  0.18115211263885775
 F1 Score: 0.8363636363636363
 ```
+
+## Ideas for Improvement
+- Performing some calibration on the predicted probabilities
+    - `CalibrationCV` from `sklearn`
+    - Changing the decision threshold from the default value of 0.5
+- Assessing feature importance
+    - Add feature importance outputs to the report
 
 ## Model Delivery (Docker)
 
