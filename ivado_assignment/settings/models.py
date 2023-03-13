@@ -28,14 +28,26 @@ class ModelSettings:  # pylint: disable=too-few-public-methods
         - and preprocessing pipeline for categorical and numerical features
     """
     seed = 42
-    classifiers = [
-        BalancedRandomForestClassifier(random_state=seed),
-        RandomForestClassifier(random_state=seed),
-        GradientBoostingClassifier(random_state=seed)
+    classifiers_and_hyperparms = [
+        (
+            BalancedRandomForestClassifier(random_state=seed),
+            {
+                "clf__n_estimators": [25, 50, 100]
+            }
+        ),
+        (
+            RandomForestClassifier(random_state=seed),
+            {
+                "clf__n_estimators": [25, 50, 100]
+            }
+        ),
+        (
+            GradientBoostingClassifier(random_state=seed),
+            {
+                "clf__n_estimators": [25, 50, 100]
+            }
+        ),
     ]
-    hyperparams = {
-        "clf__n_estimators": [25, 50, 100]
-    }
 
     def __init__(
         self,

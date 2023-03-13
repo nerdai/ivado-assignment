@@ -51,7 +51,7 @@ def train():
     best_model = None
     running_score = 0
     logger.info("beginning model selection")
-    for clf in setting.classifiers:
+    for clf, hyperparams in setting.classifiers_and_hyperparms:
         model = Pipeline(
             steps=[
                 ('preprocessor', setting.preprocessing),
@@ -60,7 +60,7 @@ def train():
         )
         bayes = BayesSearchCV(
             model,
-            search_spaces=setting.hyperparams,
+            search_spaces=hyperparams,
             scoring=setting.model_selection_critiera,
             n_iter=20, cv=4
         )
