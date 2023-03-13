@@ -1,6 +1,87 @@
 # Overview
+This repository houses the Python code that was used to conduct the ML modelling
+analyses of the IVADO Labs take home assignment. The assignment itself was a
+prototypical ML project requiring one to:
+- perform EDA
+- build an ML model
+    - perform data cleaning
+    - perform model selection
+    - perform hyperparameter tuning
+    - determine most appropriate performance metrics
+- build a pipeline for reproducibility of results (or for deploying the model
+to a server).
+
+The rest of the README briefly summarizes those activities taken here that
+provide context to the contents of this code base. Before delving into that
+summary, here is the print out of the tree-structure for this project's code
+base
+```
+.
+├── Dockerfile
+├── README.md
+├── ¹artifacts
+│   ├── models
+│   │   ├── complete-model.joblib
+│   │   └── imputed-model.joblib
+│   ├── preds
+│   │   ├── complete-predictions.csv
+│   │   └── imputed-predictions.csv
+│   └── training_logs
+│       ├── complete.log
+│       └── imputed.log
+├── ¹data
+│   ├── processed
+│   │   ├── complete_df.csv
+│   │   └── incomplete_df.csv
+│   ├── raw
+│   │   └── 2021-10-19_14-11-08_val_candidate_data.csv
+│   └── splits
+│       ├── complete_df
+│       │   ├── test.csv
+│       │   └── train.csv
+│       └── incomplete_df
+│           ├── test.csv
+│           └── train.csv
+├── ivado_assignment
+│   ├── __init__.py
+│   ├── bin
+│   │   ├── __init__.py
+│   │   ├── get_metrics.py
+│   │   ├── inference.py
+│   │   └── training.py
+│   ├── data_processors
+│   │   ├── __init__.py
+│   │   ├── cleaner.py
+│   │   └── splitter.py
+│   ├── settings
+│   │   ├── __init__.py
+│   │   ├── data.py
+│   │   └── models.py
+│   └── utils
+│       ├── __init__.py
+│       └── data_loader.py
+├── notebooks
+│   ├── sandbox-model.ipynb
+│   └── sandbox.ipynb
+├── poetry.lock
+├── pylintrc
+├── pyproject.toml
+├── setup.sh
+└── tests
+    ├── __init__.py
+    ├── test_data_cleaner.py
+    ├── test_data_splitter.py
+    └── test_ivado_assignment.py
+```
+¹ `data` and `artifacts` are not checked into this Github Repo.
 
 ## Exploratory Data Analysis
+See `./notebooks/eda.ipynb` for the full analysis, but as a brief summary, 
+listed below are the key takeaways:
+
+1.
+2.
+3.
 
 ## Model Build
 
