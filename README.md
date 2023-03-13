@@ -1,4 +1,8 @@
 # Overview
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/92402603/224793338-56622569-fca9-4e50-b592-32fbe7a9f64e.png" alt="ivado-assignment excalidraw" width="50%" height="50%">
+</p>
+    
 This repository houses the Python code that was used to conduct the ML modelling
 analyses of the IVADO Labs take home assignment. The assignment itself was a
 prototypical ML project requiring one to:
