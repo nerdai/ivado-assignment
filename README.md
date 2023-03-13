@@ -11,10 +11,9 @@ prototypical ML project requiring one to:
 - build a pipeline for reproducibility of results (or for deploying the model
 to a server).
 
-The rest of the README briefly summarizes those activities taken here that
-provide context to the contents of this code base. Before delving into that
-summary, here is the print out of the tree-structure for this project's code
-base
+The rest of the README briefly summarizes those such activities taken here that
+provide context to this code base. Before delving into that summary, however,
+here is the print out of the tree-structure for this project.
 ```
 .
 ├── Dockerfile
@@ -84,17 +83,127 @@ listed below are the key takeaways:
 3.
 
 ## Model Build
+This section of README provides the details to the typical ML model building
+process that was applied in this project. As noted above, some of the steps
+were applied twice since two analyses were conducted: `Complete` and `Imputed`.
 
 ### Data Cleaning
+The following processing steps were taken to the original data set file:
+
+1. The two erroneously entered observations for `feature_6` were removed from
+the dataset;
+2. The `target` field was encoded to numeric with legend `Y=1` and `N=0`.
 
 ### Features
+The features that were used in the analysis and which are organized by their
+type are listed below:
+
+```
+numerical: ['feature_5', 'feature_6', 'feature_7'],
+
+categorical: [
+    'feature_0',
+    'feature_1',
+    'feature_2',
+    'feature_3',
+    'feature_4',
+    'feature_8',
+    'feature_9',
+    'feature_10',
+],
+```
+
+### Preprocessing
+Preprocessing steps were applied uniformly to the type of features. I.e., all
+`categorical` features used the same preprocessing steps.
+
+`categorical`:
+- Imputed with `missing` category (for `Imputed` analysis only);
+- One-hot-encoder where first column is dropped.
+
+`numerical`:
+- Imputed with `median` value (for `Imputed` analysis only).
 
 ### Training
-#### Dataset Splitting
+A (very) lightweight autoML was built and used for training an ML model in both
+the `Imputed` and `Complete` case. Specifically, 3 candidate ML tree-based
+models along with the `n_estimators` hyperparameter formed the search space
+for our model selection.
 
-### Performance
+#### Dataset Splitting
+After running `ivado_assignment.data_processors.cleaner`, the `splitter` script
+is ran in order to split the processed data files into `train` and `test`
+splits. The default percentage used for both `Imputed` and `Complete` case was
+75%/25% for `train`/`test`.
 
 #### Choice of Metric
+The Brier score is used here as the metric to select the best model as well as
+for assessing the best model's performance on the `test` sets (although other
+metrics are reported as well). The choice of Brier score was due to the fact
+that the dataset is slight imbalanced, with class `0` or (`N`) being slightly
+underepresented relative to its class counterpart, `1` or (`Y`). This metric
+is understood as best practice for probability predictions even with
+imbalanced data.
+
+It should be noted though, that other metrics could be more suitable, depending
+on the cost of false positives or false negatives on the minority class. The
+package here can easily be adapted or slightly enhanced to accomodate such
+metrics.
+
+#### Models Tested and their HyperParameters
+The following tree-based models and their hyperparameters were tested:
+
+Models:
+- `RandomForestClassifier` (`sklearn`)
+- `GradientBoostingClassifier` (`sklearn`)
+- `BalancedRandomForestClassifier` (`imblearn`) *uses undersampling*
+
+HyperParameter:
+- `n_estimator`: `[25, 50, 100]`
+
+### Test Performance
+
+`Complete`:
+```
+              precision    recall  f1-score   support
+
+           0       0.63      0.51      0.57        37
+           1       0.77      0.84      0.80        70
+
+    accuracy                           0.73       107
+   macro avg       0.70      0.68      0.68       107
+weighted avg       0.72      0.73      0.72       107
+
+Confusion:
+ [[19 18]
+ [11 59]] 
+
+ROC-AUC:  0.7314671814671815
+Log loss:  0.5551160202214863
+Brier:  0.1878762585669782
+F1 Score: 0.8027210884353742
+```
+
+`Imputed`:
+```
+              precision    recall  f1-score   support
+
+           0       0.64      0.40      0.49        45
+           1       0.77      0.90      0.83       100
+
+    accuracy                           0.74       145
+   macro avg       0.71      0.65      0.66       145
+weighted avg       0.73      0.74      0.73       145
+
+Confusion:
+ [[18 27]
+ [10 90]] 
+
+ROC-AUC:  0.7006666666666667
+Log loss:  0.5799618519385159
+Brier:  0.18857150138888887
+F1 Score: 0.8294930875576038
+```
 
 ## Model Delivery (Docker)
 
