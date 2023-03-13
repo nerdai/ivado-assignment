@@ -62,7 +62,8 @@ def train():
             model,
             search_spaces=hyperparams,
             scoring=setting.model_selection_critiera,
-            n_iter=20, cv=4
+            n_iter=20, cv=4,
+            random_state=setting.seed
         )
         bayes.fit(train_df[config['categorical'] + config['numerical']],
                   train_df[config['target']])
