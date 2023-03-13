@@ -31,7 +31,7 @@ class ModelSettings:  # pylint: disable=too-few-public-methods
     seed = 42
     classifiers_and_hyperparms = [
         (
-            LogisticRegression(random_state=42, penalty='l2'),
+            LogisticRegression(random_state=seed, penalty='l2'),
             {
                 "clf__C": [1., 0.99, 0.98, 0.97, 0.96, 0.95]
             }
