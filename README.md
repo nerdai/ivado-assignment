@@ -425,8 +425,7 @@ ivado-assignment poetry run python -m ivado_assignment.bin.get_metrics \
 ```
 
 ## Model Delivery (Non-Docker, Poetry Only)
-In this section, we provide similar steps (though we require one less step here
-since we don't have to build a docker image) to the previous section for 
+In this section, we provide similar steps to the previous section for 
 reproducing the analyses and model builds but without using Docker. 
 
 #### Prerequisites
@@ -470,13 +469,18 @@ cd ivado-assignment
 sh setup.sh
 ```
 
-#### Step 2: Clean the data
+#### Step 2: Install dependencies
+```
+poetry install
+```
+
+#### Step 3: Clean the data
 
 ```
 poetry run python -m ivado_assignment.data_processors.cleaner
 ```
 
-#### Step 3: Split the data into train and test splits
+#### Step 4: Split the data into train and test splits
 
 `Complete`:
 ```
@@ -490,7 +494,7 @@ poetry run python -m ivado_assignment.data_processors.splitter \
 --data ./data/processed/incomplete_df.csv --output ./data/splits/incomplete_df 
 ```
 
-#### Step 4: Training time
+#### Step 5: Training time
 `Complete`:
 ```
 poetry run python -m ivado_assignment.bin.training --setting complete
@@ -501,7 +505,7 @@ poetry run python -m ivado_assignment.bin.training --setting complete
 poetry run python -m ivado_assignment.bin.training --setting imputed
 ```
 
-#### Step 5: Inferences (i.e., Make Predictions)
+#### Step 6: Inferences (i.e., Make Predictions)
 
 `Complete`:
 ```
@@ -515,7 +519,7 @@ poetry run python -m ivado_assignment.bin.inference \
 --data ./data/splits/incomplete_df/test.csv --setting imputed
 ```
 
-#### Step 6: Get Performance Metrics
+#### Step 7: Get Performance Metrics
 
 `Complete`:
 ```
