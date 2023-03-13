@@ -78,9 +78,28 @@ here is the print out of the tree-structure for this project.
 See `./notebooks/eda.ipynb` for the full analysis, but as a brief summary, 
 listed below are the key takeaways:
 
-1.
-2.
-3.
+1. There are a few data cleaning steps that need to be performed
+2. We will conduct two separate analyses: `Complete` case and `Imputed` case
+3. Target is slightly imbalanced with class N appearing only 31% of the time
+
+`Complete` vs `Imputed`:
+- Since there are rows with missing values, we decided to perform two separate
+but similar analyses. 
+    - `Complete` considers only complete observations
+    - `Imputed` considers all observations and uses an impute strategy to fill
+    in missing values
+
+`laundry list` of data cleaning and processing items:
+```
+1. remove the two records that have erroneous entries for feature_6
+2. drop feature 11 since same as feature_2
+3. drop feature 12 since same as feature_4
+4. cast feature_8 as a categorical feature
+5. case feature_9 as a categorical feature
+6. prepare a .csv file with only complete observations for complete-case analysis
+7. prepare a .csv data file with both incomplete and complete observations for an imputed analysis
+8. target has some imbalance with class N occurring only 31% of the time in the data
+```
 
 ## Model Build
 This section of README provides the details to the typical ML model building
@@ -214,6 +233,12 @@ associated metrics against the respective `test` set. Note all commands are
 expected to run while in the main folder of this repo and that it is assumed
 that `docker-cli` has been installed.
 
+#### Prerequisites
+1. ensure raw data file is located in correct path
+
+The raw data file `2021-10-19_14-11-08_val_candidate_data.csv`
+must be stored in a directory: `ivado-assignment/data/raw/`.
+
 #### Step 0: Clone the contents of this repository
 `ssh`:
 ```
@@ -343,6 +368,10 @@ since we don't have to build a docker image) to the previous section for
 reproducing the analyses and model builds but without using Docker. 
 
 #### Prerequisites
+1. ensure correct version of Poetry is installed
+2. ensure correct version of Python is installed and active
+3. ensure raw data file is located in correct path
+
 Since were are no longer using Docker, we have to ensure a few more dependencies
 are installed and are of the correct versions. In particular, the steps below 
 require:
@@ -359,7 +388,7 @@ curl -sSL https://install.python-poetry.org | python3 -
 (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
 ```
 
-Also note that again the raw data file `2021-10-19_14-11-08_val_candidate_data.csv`
+Finally, the raw data file `2021-10-19_14-11-08_val_candidate_data.csv`
 must be stored in a directory: `ivado-assignment/data/raw/`.
 
 #### Step 0: Clone the contents of this repository
