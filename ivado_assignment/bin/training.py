@@ -1,5 +1,7 @@
 """
-TODO
+Module for performing lightweight autoML. That is automatic testing of
+candidate models and their hyperparameter tuning. The best model is stored in
+local.
 """
 
 import argparse
